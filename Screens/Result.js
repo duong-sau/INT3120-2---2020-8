@@ -1,25 +1,17 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-const tru = 'Số câu bạn đã làm đúng               ';
-const fla = 'Số câu bạn đã làm sai                ';
-const non = 'Số câu bạn chưa làm                  ';
+import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+const correct = 'Số câu bạn đã làm đúng               ';
+const unCorrect = 'Số câu bạn đã làm sai                ';
+const unfinished = 'Số câu bạn chưa làm                  ';
+let R;
 export default class Result extends Component {
   state = {};
 
   constructor(props) {
     super(props);
-    this.state = {
-      tru: 1,
-      fla: 0,
-      non: 0,
-    };
+    R = this;
   }
 
   static propTypes = {};
@@ -29,43 +21,46 @@ export default class Result extends Component {
   render() {
     return (
       <View style={styles.style}>
+        <View style={styles.titleFrame}>
+          <Icon
+            name="arrow-left"
+            color="white"
+            size={30}
+            onPress={() => {
+              this.props.navigation.replace('Grammar');
+            }}
+            style={{marginRight: 15}}
+          />
+          <Text style={styles.titleText}>{this.props.route.params.title}</Text>
+        </View>
         <View>
           <Text style={styles.result}>
-            {tru} {this.state.tru}
+            {correct} {this.props.route.params.correct}
           </Text>
           <Text style={styles.result}>
-            {fla} {this.state.fla}
+            {unCorrect} {this.props.route.params.unCorrect}
           </Text>
           <Text style={styles.result}>
-            {non} {this.state.non}
+            {unfinished} {this.props.route.params.unfinished}
           </Text>
         </View>
         <View style={styles.footer}>
           <TouchableOpacity
             style={{width: 50, height: 50}}
             onPress={() => {
-              this.props.navigation.navigate('Practice');
+              this.props.navigation.replace('Practice', {
+                title: R.props.route.params.title,
+                key: R.props.route.params.key,
+              });
             }}>
-            <Image
-              style={{
-                width: 50,
-                height: 50,
-              }}
-              source={require('C:\\Users\\Sau\\Desktop\\react-native\\app4\\src\\repeat.png')}
-            />
+            <Icon name="arrow-circle-left" size={50} color="#42BDFB" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{width: 50 ,height: 50}}
+            style={{width: 50, height: 50}}
             onPress={() => {
               this.props.navigation.navigate('Grammar');
             }}>
-            <Image
-              style={{
-                width: 50,
-                height: 50,
-              }}
-              source={require('C:\\Users\\Sau\\Desktop\\react-native\\app4\\src\\check.png')}
-            />
+            <Icon name="arrow-circle-right" size={50} color="#42BDFB" />
           </TouchableOpacity>
         </View>
       </View>
@@ -80,13 +75,27 @@ const styles = StyleSheet.create({
   },
   result: {
     padding: 20,
-    fontSize: 18,
+    fontSize: 20,
   },
   footer: {
     flexDirection: 'row',
-    backgroundColor: '#01B1BC',
     height: 50,
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
+  titleFrame: {
+    width: '100%',
+    height: '8%',
+    backgroundColor: 'rgb(60,179,113)',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  titleText: {
+    color: 'white',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+
 });

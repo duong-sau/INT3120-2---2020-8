@@ -1,144 +1,309 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-var P;
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  CheckBox,
+  Alert,
+} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import Icon from 'react-native-vector-icons/FontAwesome';
+let P;
+let data = [];
+let questionList = [];
+let answer = [];
+let numberQuestion = 0;
+let max = 1;
+let correct = 0;
+let unCorrect = 0;
+let unfinished = 0;
+let questionValue;
+let key;
+let sort = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
 export default class Practice extends Component {
   constructor({props}) {
     super(props);
     P = this;
     this.state = {
-      ans0: 0,
-      ans1: 0,
-      ans2: 0,
-      ans3: 0,
-      que: 1,
-      num:1,
+      answer: -1,
+      question: 0,
+      number: 1,
+      s: 0,
     };
+  }
+  loadFromDataBase = async () => {
+    try {
+      let q1 = firebase.database().ref(key);
+      q1.on('value', (datasnap) => {
+        questionValue = datasnap.val();
+        P.build();
+        if (questionValue != null) {
+          P.saveFromDataBase();
+        }
+      });
+    } catch (e) {}
+  };
+  saveFromDataBase = async () => {
+    await AsyncStorage.setItem(key, JSON.stringify(questionValue))
+      .then(() => {})
+      .catch(() => {});
+  };
+  build() {
+    try {
+      questionList = Object.values(questionValue);
+      console.log('gói câu hỏi: ', questionList);
+      data = Object.values(questionList[numberQuestion]);
+      P.reconvert();
+      console.log('câu hỏi đầu tiên là:   ', data);
+      max = questionList.length - 1;
+      for (let i = 0; i <= max; i++) {
+        answer[i] = -1;
+      }
+      this.setState({
+        answer: -1,
+        question: 0,
+        number: 1,
+        s: 0,
+      });
+      for (let i = 0; i <= max; i++) {
+        sort[i] = Math.round(Math.random() * 4);
+      }
+      this.setState({s: 0});
+    } catch (e) {
+      P.props.navigation.replace('Grammar');
+      Alert.alert('Chúng tôi sẽ sớm cho ra mắt nội dung này');
+    }
+  }
+  reLoad = async () => {
+    try {
+      let questionsString = await AsyncStorage.getItem(key);
+      if (questionsString == null) {
+        this.loadFromDataBase();
+        Alert.alert(
+          'Bạn chưa tải bài học này\n bài tập sẽ được tự động tải về',
+        );
+      } else {
+        questionValue = JSON.parse(questionsString);
+        this.build();
+      }
+    } catch (e) {
+      this.loadFromDataBase();
+    }
+  };
+  componentDidMount() {
+    key = this.props.route.params.key.toString();
+    this.reLoad();
   }
 
   select(id) {
-    if (id === 'A') {
-      this.setState({
-        ans0: 1,
-        ans1: 0,
-        ans2: 0,
-        ans3: 0,
-      });
+    this.setState({
+      answer: id,
+    });
+  }
+  save() {
+    answer[numberQuestion] = P.state.answer;
+  }
+  resum() {
+    data = Object.values(questionList[numberQuestion]);
+    P.reconvert();
+    this.setState({
+      answer: answer[numberQuestion],
+      question: numberQuestion,
+    });
+  }
+  reconvert() {
+    let mid = data[2];
+    data[2] = data[4];
+    data[4] = mid;
+  }
+  next() {
+    if (numberQuestion >= max) {
+    } else {
+      this.save();
+      numberQuestion = numberQuestion + 1;
+      this.resum();
     }
-    if (id === 'B') {
-      this.setState({
-        ans0: 0,
-        ans1: 1,
-        ans2: 0,
-        ans3: 0,
-      });
+  }
+  back() {
+    if (numberQuestion <= 0) {
+    } else {
+      this.save();
+      numberQuestion = numberQuestion - 1;
+      this.resum();
     }
+  }
+  submit() {
+    this.save();
 
-    if (id === 'C') {
-      this.setState({
-        ans0: 0,
-        ans1: 0,
-        ans2: 1,
-        ans3: 0,
-      });
+    for (let i = 0; i <= max; i++) {
+      if (answer[i] == 0) {
+        correct = correct + 1;
+      } else if (answer[i] == -1) {
+        unfinished = unfinished + 1;
+      } else {
+        unCorrect = unCorrect + 1;
+      }
     }
-
-    if (id === 'D') {
-      this.setState({
-        ans0: 0,
-        ans1: 0,
-        ans2: 0,
-        ans3: 1,
-      });
-    }
+  }
+  reset() {
+    numberQuestion = 0;
+    correct = 0;
+    unCorrect = 0;
+    unfinished = 0;
   }
   render() {
     return (
       <View style={styles.style}>
-        <View style={styles.question}>
-          <Text style={styles.question}>
-            {this.state.que}. {question}
+        <View style={styles.titleFrame}>
+          <Icon
+            name="arrow-left"
+            color="white"
+            size={30}
+            onPress={() => {
+              this.props.navigation.replace('Grammar');
+            }}
+          />
+          <Text style={styles.titleText}>
+            {this.props.route.params.title}
+            {'     '}
+            {this.state.question + 1}
+            {'/'}
+            {max + 1}
           </Text>
         </View>
-        <Answer content={answer[0]} id={'A'} isselect={this.state.ans0} />
-        <Answer content={answer[1]} id={'B'} isselect={this.state.ans1} />
-        <Answer content={answer[2]} id={'C'} isselect={this.state.ans2} />
-        <Answer content={answer[3]} id={'D'} isselect={this.state.ans3} />
+        <View style={styles.question}>
+          <Text style={styles.question}>
+            {this.state.question + 1}. {data[4]}
+          </Text>
+        </View>
+        <View style={styles.answerFrame}>
+          <Answer
+            content={data[(sort[P.state.question] + 1) % 4]}
+            id={(sort[P.state.question] + 1) % 4}
+          />
+          <Answer
+            content={data[(sort[P.state.question] + 2) % 4]}
+            id={(sort[P.state.question] + 2) % 4}
+          />
+          <Answer
+            content={data[(sort[P.state.question] + 3) % 4]}
+            id={(sort[P.state.question] + 3) % 4}
+          />
+          <Answer
+            content={data[(sort[P.state.question] + 4) % 4]}
+            id={(sort[P.state.question] + 4) % 4}
+          />
+        </View>
         <View style={styles.footer}>
-          <Text style={styles.curent}>{this.state.que} /{this.state.num}</Text>
-          <View style={styles.nul}/>
           <TouchableOpacity
-            style={{width: '100%', height: 50}}
+            style={styles.back_button}
             onPress={() => {
-              this.props.navigation.navigate('Result');
+              this.back();
             }}>
-            <Image
-              style={{
-                width: 50,
-                height: 50,
-              }}
-              source={require('C:\\Users\\Sau\\Desktop\\react-native\\app4\\src\\next.png')}
-            />
+            <Icon name="arrow-circle-left" size={50} color="#42BDFB" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.submit_button}
+            onPress={() => {
+              this.submit();
+              this.props.navigation.replace('Result', {
+                correct: correct,
+                unCorrect: unCorrect,
+                unfinished: unfinished,
+                title: this.props.route.params.title,
+                key: this.props.route.params.key,
+              });
+              this.reset();
+            }}>
+            <Text style={styles.footerText}>NỘP BÀI</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.next_button}
+            onPress={() => {
+              this.next();
+            }}>
+            <Icon name="arrow-circle-right" size={50} color="#42BDFB" />
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 }
-let question =
-  'I’m not sure, but Tony________ probably get that demanding job.';
-let answer = ['must', 'need', 'ought', 'might'];
+
+function isSelect(state, id) {
+  if (state === id) {
+    return true;
+  } else {
+    return false;
+  }
+}
 export class Answer extends Component {
   render() {
-    if (this.props.isselect === 0) {
-      return (
-        <TouchableOpacity
-          style={styles.answer}
-          onPress={() => {
+    return (
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+        }}>
+        <CheckBox
+          style={styles.checkbox}
+          value={isSelect(P.state.answer, this.props.id)}
+          onChange={() => {
             P.select(this.props.id);
-          }}>
-          <Text style={styles.content}>
-            {this.props.id}. {this.props.content}
-          </Text>
-        </TouchableOpacity>
-      );
-    } else {
-      return (
-        <TouchableOpacity
-          style={styles.answer}
-          onPress={() => {
-            P.select(this.props.id);
-          }}>
-          <Text style={styles.selectContent}>
-            {this.props.id}. {this.props.content}
-          </Text>
-        </TouchableOpacity>
-      );
-    }
+          }}
+        />
+        <Text style={styles.content}>{this.props.content}</Text>
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  style: {
+  titleFrame: {
+    width: '100%',
+    height: '10%',
+    backgroundColor: 'rgb(60,179,113)',
     display: 'flex',
-    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  curent:{
-    fontSize: 30,
-  fontWeight:'bold',
+  titleText: {
+    color: 'white',
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginRight: '5%',
   },
   question: {
-    marginLeft:'2%',
-    fontSize: 18,
+    marginLeft: '2%',
+    fontSize: 20,
     flex: 4,
+    marginTop: 20,
+    marginBottom: -100,
+    fontWeight: 'bold',
+  },
+  answerFrame: {
+    marginTop: 180,
+    marginLeft: 0,
   },
   answer: {
+    display: 'flex',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
+    marginTop: 55,
+    fontSize: 70,
+    borderColor: 'red',
+    borderWidth: 1,
+    flexDirection: 'row',
   },
   content: {
-    fontSize: 18,
-    marginLeft: '5%',
+    fontSize: 20,
+    marginLeft: '1%',
     color: 'black',
   },
   selectContent: {
@@ -147,14 +312,38 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   footer: {
-    flexDirection:'row',
-    backgroundColor: '#01B1BC',
+    marginTop: 100,
     height: 50,
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'space-between',
-
   },
-  nul:{
-    width:"75%"
-  }
-
+  footerText: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    textTransform: 'uppercase',
+  },
+  image: {
+    width: 50,
+    height: 50,
+  },
+  next_button: {
+    marginRight: 70,
+  },
+  back_button: {
+    marginLeft: 80,
+  },
+  submit_button: {
+    width: 110,
+    elevation: 8,
+    backgroundColor: 'rgb(0,191,255)',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  checkbox: {},
 });

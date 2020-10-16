@@ -26,7 +26,6 @@ export default class NaviBar extends Component {
       {title: 'góp ý'},
       {title: 'Phản hồi'},
       {title: 'Điều khoản dịch vụ'},
-      {title: 'hết ý tưởng'},
     ];
     return (
       <View style={{flex: 1}}>

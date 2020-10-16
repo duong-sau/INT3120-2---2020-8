@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import SideMenu from './SideMenu';
 import {NavigationContainer} from '@react-navigation/native';
 import 'react-native-gesture-handler';
@@ -19,7 +19,21 @@ export default class Screen extends Component {
   componentDidMount() {}
 
   render() {
-    return <View style={styles.container} />;
+    return (
+      <View>
+        <View>
+          <Image
+            source={require('C:\\Users\\Sau\\Desktop\\app4\\src\\fox.png')}
+            style={{width: 400, height: 400}}
+          />
+        </View>
+        <View style={{flex: 1, width: '95%'}}>
+          <TouchableOpacity style={styles.buttonFormat}>
+            <Text style={styles.buttonText}>Start</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   }
 }
 

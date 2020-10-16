@@ -1,55 +1,73 @@
 import React, {Component} from 'react';
-import {StyleSheet,View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import Login from '../Screens/Login';
-import VocabularyController from '../Screens/VocabularyController';
-import GrammarController from '../Screens/GrammarController';
-import Toeic600 from '../Screens/Toeic600';
-import About from '../Screens/About';
-import Privacy from '../Screens/Privacy';
+import {View, Image} from 'react-native';
+import {NavigationContainer, DrawerActions} from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+import GrammarController from '../Screens/Controller/GrammarController';
+import VocabularyController from '../Screens/Controller/VocabularyController';
 import Practice from '../Screens/Practice';
-const Draw = createDrawerNavigator();
+import Toeic600 from '../Screens/Toeic600';
+import Login from '../Screens/Login';
+import Privacy from '../Screens/Privacy';
+import About from '../Screens/About';
+function fox() {
+  return <Fox />;
+}
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView
+      style={{backgroundColor: 'rgba(90,240,113,30)', color: 'white'}}
+      {...props}>
+      <DrawerItem
+        label={() => fox()}
+        style={{height: 100, width: 100}}
+        onPress={() => props.navigation.dispatch(DrawerActions.closeDrawer())}
+      />
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+}
 
-export default class SideMenu extends Component {
-  state = {};
+global.grammarAchivements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+global.vocabularyAchivements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  constructor(props) {
-    super(props);
-  }
-  static propTypes = {};
 
-  componentDidMount() {}
-  feedback() {
-    return <View />;
-  }
+const Drawer = createDrawerNavigator();
+
+function MyDrawer() {
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="NGỮ PHÁP" component={GrammarController} />
+      <Drawer.Screen name="TỪ VỰNG" component={VocabularyController} />
+      <Drawer.Screen name="LUYỆN TẬP" component={Practice} />
+      <Drawer.Screen name="TOEIC 600+" component={Toeic600} />
+      <Drawer.Screen name="TOEIC 800+" component={Toeic600} />
+      <Drawer.Screen name="ĐĂNG NHẬP" component={Login} />
+      <Drawer.Screen name="GÓP Ý" component={View} />
+      <Drawer.Screen name="ĐIỀU KHOẢN" component={Privacy} />
+      <Drawer.Screen name="VỀ CHÚNG TÔI" component={About} />
+    </Drawer.Navigator>
+  );
+}
+export class Fox extends Component {
   render() {
     return (
-      <NavigationContainer>
-        <Draw.Navigator>
-          <Draw.Screen name="Grammar" component={GrammarController} />
-          <Draw.Screen name="Vocabulary" component={VocabularyController} />
-          <Draw.Screen name="Practice" component={Practice} />
-          <Draw.Screen name="600" component={Toeic600} />
-          <Draw.Screen name="800" component={Toeic600} />
-          <Draw.Screen name="Login" component={Login} />
-          <Draw.Screen name="Feedback" component={View} />
-          <Draw.Screen name="Privacy" component={Privacy} />
-          <Draw.Screen name="About" component={About} />
-        </Draw.Navigator>
-      </NavigationContainer>
+      <Image
+        style={{width: 100, height: 100}}
+        source={require('../src/mrfox.png')}
+      />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  style: {
-    flex: 1,
-    backgroundColor: '#01B1BC',
-  },
-
-  imageButtonStyle: {
-    width: 70,
-    height: 70,
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyDrawer />
+    </NavigationContainer>
+  );
+}
