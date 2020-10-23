@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   Text,
   View,
@@ -34,7 +34,7 @@ function GrammarEntity({navigation, route}) {
             }}>
             <Text style={styles.footerText}>
               Đã hoàn thành{' '}
-              {Number(global.grammarAchivements[route.params.content1-1]) * 20} %
+              {global.grammarAchievements[global.grammarState] * 20} %
             </Text>
             <Text style={styles.footerText}>Luyện Tập</Text>
           </TouchableOpacity>

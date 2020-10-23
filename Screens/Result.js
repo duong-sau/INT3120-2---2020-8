@@ -7,16 +7,10 @@ const unCorrect = 'Số câu bạn đã làm sai                ';
 const unfinished = 'Số câu bạn chưa làm                  ';
 let R;
 export default class Result extends Component {
-  state = {};
-
   constructor(props) {
     super(props);
     R = this;
   }
-
-  static propTypes = {};
-
-  componentDidMount() {}
 
   render() {
     return (
@@ -97,5 +91,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-
 });

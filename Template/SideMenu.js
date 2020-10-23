@@ -32,8 +32,6 @@ function CustomDrawerContent(props) {
   );
 }
 
-global.grammarAchivements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-global.vocabularyAchivements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 const Drawer = createDrawerNavigator();
@@ -66,8 +64,6 @@ export class Fox extends Component {
 }
 export default function App() {
   return (
-    <NavigationContainer>
       <MyDrawer />
-    </NavigationContainer>
   );
 }

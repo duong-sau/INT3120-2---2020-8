@@ -1,18 +1,14 @@
 import React, {Component} from 'react';
-
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ProgressBar} from '@react-native-community/progress-bar-android';
 
+global.grammarState = 0;
+global.maxGrammar = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
 export default class Grammar extends Component {
-  state = {};
-
   constructor(props) {
     super(props);
+    console.log('khỏi tạo màn hình ngữ pháp ', global.grammarAchievements);
   }
-
-  static propTypes = {};
-
-  UNSAFR_componentWillMount() {}
-
   render() {
     return (
       <View>
@@ -20,47 +16,47 @@ export default class Grammar extends Component {
           data={[
             {
               content: 'Cấu trúc chung của 1 câu',
-              content1: '1',
+              ID: 1,
               key: 'G1',
             },
             {
               content: 'Câu bị động',
-              content1: '2',
+              ID: 2,
               key: 'G2',
             },
             {
               content: 'Câu cầu khiến',
-              content1: '3',
+              ID: 3,
               key: 'G3',
             },
             {
               content: 'Đại từ nhân xưng',
-              content1: '4',
+              ID: 4,
               key: 'G4',
             },
             {
               content: 'Tân ngữ',
-              content1: '5',
+              ID: 5,
               key: 'G5',
             },
             {
               content: 'Các thì hiện tại',
-              content1: '6',
+              ID: 6,
               key: 'G6',
             },
             {
               content: 'Các thì quá khứ',
-              content1: '7',
+              ID: 7,
               key: 'G7',
             },
             {
               content: 'Các thì tương lai',
-              content1: '8',
+              ID: 8,
               key: 'G8',
             },
             {
               content: 'Câu điều kiện',
-              content1: '9',
+              ID: 9,
               key: 'G9',
             },
           ]}
@@ -70,16 +66,30 @@ export default class Grammar extends Component {
               <TouchableOpacity
                 style={styles.category}
                 onPress={() => {
-                  this.props.navigation.navigate('GrammarEntity', {
+                  global.grammarState = item.ID - 1;
+                  this.props.navigation.replace('GrammarEntity', {
                     title: item.content,
                     key: item.key,
-                    content1: Number(item.content1),
+                    ID: item.ID,
                   });
                 }}>
                 <View style={styles.circle}>
-                  <Text style={styles.textCircle}>{item.content1}</Text>
+                  <Text style={styles.textCircle}>{item.ID}</Text>
                 </View>
-                <Text style={styles.content}>{item.content}</Text>
+                <View>
+                  <Text style={styles.content}>{item.content}</Text>
+                  <ProgressBar
+                    styleAttr="Horizontal"
+                    indeterminate={false}
+                    progress={global.grammarAchievements[item.ID - 1] / 5}
+                  />
+                  <Text>
+                    {(global.grammarAchievements[item.ID - 1] /
+                      global.maxGrammar[item.ID - 1]) *
+                      100}
+                    %
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           )}
@@ -106,17 +116,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 7,
+    width: '100%',
     fontSize: 20,
     marginLeft: 20,
     marginBottom: 20,
     fontWeight: 'bold',
-  },
-  achivements: {
-    flex: 1,
-    fontSize: 20,
-    marginLeft: 20,
-    marginBottom: 20,
-    fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: 'red',
   },
   grammarTitle: {
     height: 70,

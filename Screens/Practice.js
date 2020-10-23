@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  CheckBox,
-  Alert,
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/database';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import './Controller/SetAuth';
+import 'ajv';
 let P;
 let data = [];
 let questionList = [];
@@ -27,6 +23,7 @@ let sort = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 export default class Practice extends Component {
   constructor({props}) {
     super(props);
+    // eslint-disable-next-line consistent-this
     P = this;
     this.state = {
       answer: -1,
@@ -55,10 +52,8 @@ export default class Practice extends Component {
   build() {
     try {
       questionList = Object.values(questionValue);
-      console.log('gói câu hỏi: ', questionList);
       data = Object.values(questionList[numberQuestion]);
       P.reconvert();
-      console.log('câu hỏi đầu tiên là:   ', data);
       max = questionList.length - 1;
       for (let i = 0; i <= max; i++) {
         answer[i] = -1;
@@ -82,7 +77,7 @@ export default class Practice extends Component {
     try {
       let questionsString = await AsyncStorage.getItem(key);
       if (questionsString == null) {
-        this.loadFromDataBase();
+        await this.loadFromDataBase();
         Alert.alert(
           'Bạn chưa tải bài học này\n bài tập sẽ được tự động tải về',
         );
@@ -91,12 +86,12 @@ export default class Practice extends Component {
         this.build();
       }
     } catch (e) {
-      this.loadFromDataBase();
+      await this.loadFromDataBase();
     }
   };
   componentDidMount() {
     key = this.props.route.params.key.toString();
-    this.reLoad();
+    this.reLoad().then();
   }
 
   select(id) {
@@ -136,19 +131,22 @@ export default class Practice extends Component {
       this.resum();
     }
   }
-  submit() {
+  submit = async () => {
     this.save();
-
     for (let i = 0; i <= max; i++) {
-      if (answer[i] == 0) {
+      if (answer[i] === 0) {
         correct = correct + 1;
-      } else if (answer[i] == -1) {
+      } else if (answer[i] === -1) {
         unfinished = unfinished + 1;
       } else {
         unCorrect = unCorrect + 1;
       }
     }
-  }
+    if (correct > global.grammarAchievements[global.grammarState]) {
+      global.grammarAchievements[global.grammarState] = correct;
+      await global.setAuthUser();
+    }
+  };
   reset() {
     numberQuestion = 0;
     correct = 0;
@@ -216,6 +214,7 @@ export default class Practice extends Component {
                 unfinished: unfinished,
                 title: this.props.route.params.title,
                 key: this.props.route.params.key,
+                ID: this.props.route.params.ID,
               });
               this.reset();
             }}>
@@ -235,11 +234,7 @@ export default class Practice extends Component {
 }
 
 function isSelect(state, id) {
-  if (state === id) {
-    return true;
-  } else {
-    return false;
-  }
+  return state === id;
 }
 export class Answer extends Component {
   render() {

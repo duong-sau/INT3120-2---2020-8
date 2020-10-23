@@ -7,14 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import SideMenu from './Template/SideMenu';
-import GrammarEntity from './Screens/Entity/GrammarEntity';
-import Vocabulary from './Screens/Entity/Vocabulary';
-import Practice from './Screens/Practice';
-import Result from './Screens/Result';
+import LoginController from './Screens/Controller/LoginController';
 class App extends Component {
   render() {
-    return <SideMenu />;
+    return <LoginController />;
   }
 }
 export default App;
