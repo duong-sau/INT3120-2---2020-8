@@ -3,11 +3,10 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ProgressBar} from '@react-native-community/progress-bar-android';
 
 global.grammarState = 0;
-global.maxGrammar = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
+global.maxGrammar = [15, 15, 15, 15, 15, 15, 15, 15];
 export default class Grammar extends Component {
   constructor(props) {
     super(props);
-    console.log('khỏi tạo màn hình ngữ pháp ', global.grammarAchievements);
   }
   render() {
     return (
@@ -76,19 +75,22 @@ export default class Grammar extends Component {
                 <View style={styles.circle}>
                   <Text style={styles.textCircle}>{item.ID}</Text>
                 </View>
-                <View>
+                <View style={styles.stand_circle}>
                   <Text style={styles.content}>{item.content}</Text>
-                  <ProgressBar
-                    styleAttr="Horizontal"
-                    indeterminate={false}
-                    progress={global.grammarAchievements[item.ID - 1] / 5}
-                  />
-                  <Text>
-                    {(global.grammarAchievements[item.ID - 1] /
-                      global.maxGrammar[item.ID - 1]) *
-                      100}
-                    %
-                  </Text>
+                  <View style={styles.progess}>
+                    <Text>
+                      {(global.grammarAchievements[item.ID - 1] /
+                        global.maxGrammar[item.ID - 1]) *
+                        100}
+                      %
+                    </Text>
+                    <ProgressBar
+                      style={{width: 300}}
+                      styleAttr="Horizontal"
+                      indeterminate={false}
+                      progress={global.grammarAchievements[item.ID - 1] / 15}
+                    />
+                  </View>
                 </View>
               </TouchableOpacity>
             </View>
@@ -104,30 +106,29 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: '#e5e5e5',
     borderWidth: 2,
-    justifyContent: 'center',
     alignItems: 'flex-start',
   },
   category: {
     marginBottom: '3%',
     marginTop: '3%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'baseline',
   },
   content: {
-    flex: 7,
     width: '100%',
     fontSize: 20,
     marginLeft: 20,
-    marginBottom: 20,
+    marginBottom: 0,
     fontWeight: 'bold',
-    borderWidth: 1,
-    borderColor: 'red',
+  },
+  progess: {
+    width: 350,
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginLeft: 20,
+    marginTop: 10,
   },
   grammarTitle: {
     height: 70,
     backgroundColor: 'rgb(60,179,113)	',
-    display: 'flex',
     flexDirection: 'row',
   },
   textTitle: {
@@ -145,12 +146,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
     marginLeft: 10,
+    marginTop: 10,
+  },
+  stand_circle: {
+    marginTop: -60,
+    marginLeft: 60,
   },
   textCircle: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 25,
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 5,
   },
 });

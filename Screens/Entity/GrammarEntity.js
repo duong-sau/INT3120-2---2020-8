@@ -16,30 +16,27 @@ function GrammarEntity({navigation, route}) {
         <Icon name="arrow-left" color="white" size={30} />
         <Text style={styles.titleText}>{route.params.title}</Text>
       </View>
-      {
-        <ScrollView>
-          <View>
-            <GrammarContent type={da[0].type} content={da[0].content} />
-          </View>
-          <Text style={styles.exm}>{da[1].content}</Text>
-          <Text style={styles.cot}>{da[2].content}</Text>
-          <Text style={styles.exm}>{da[3].content}</Text>
-          <TouchableOpacity
-            style={styles.submit_button}
-            onPress={() => {
-              navigation.replace('Practice', {
-                title: route.params.title,
-                key: route.params.key,
-              });
-            }}>
-            <Text style={styles.footerText}>
-              Đã hoàn thành{' '}
-              {global.grammarAchievements[global.grammarState] * 20} %
-            </Text>
-            <Text style={styles.footerText}>Luyện Tập</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      }
+      <ScrollView>
+        <GrammarContent />
+        <Text style={styles.exm}>{da[1].content}</Text>
+        <Text style={{color: 'red'}}>0000000</Text>
+        <Text style={styles.cot}>{da[2].content}</Text>
+        <Text style={styles.exm}>{da[3].content}</Text>
+        <TouchableOpacity
+          style={styles.submit_button}
+          onPress={() => {
+            navigation.replace('Practice', {
+              title: route.params.title,
+              key: route.params.key,
+            });
+          }}>
+          <Text style={styles.footerText}>
+            Đã hoàn thành {global.grammarAchievements[global.grammarState] * 20}{' '}
+            %
+          </Text>
+          <Text style={styles.footerText}>Luyện Tập</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }

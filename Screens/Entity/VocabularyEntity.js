@@ -30,10 +30,6 @@ export default class VocabularyEntity extends Component {
     this.state = {repaint: 0};
     this.loadFromDataBase();
   }
-
-  static propTypes = {};
-
-  componentDidMount() {}
   speech(content) {
     Tts.stop();
     console.log('speech');
@@ -41,7 +37,7 @@ export default class VocabularyEntity extends Component {
   }
   render() {
     return (
-      <ScrollView>
+      <View>
         <FlatList
           data={VocabularyList}
           numColumns={1}
@@ -67,7 +63,7 @@ export default class VocabularyEntity extends Component {
           }}>
           <Text style={styles.footerText}>Luyện Tập</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     );
   }
 }

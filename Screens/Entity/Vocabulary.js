@@ -20,7 +20,7 @@ export default class Vocabulary extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.background}>
         <FlatList
           style={styles.flatShip}
           data={Data}
@@ -60,9 +60,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   background: {
-    backgroundColor: 'rgb(60,179,113)	',
+    backgroundColor: 'white',
     width: '100%',
-    height: 80,
+    height: 1000,
     display: 'flex',
     flexDirection: 'row',
   },
@@ -90,7 +90,7 @@ let Data = [
   },
   {
     content: ' Travel',
-    img: require('../../src/VocabularyImage/earth1.png'),
+    img: require('../../src/VocabularyImage/travel.png'),
   },
   {
     content: '  Music',
@@ -114,7 +114,7 @@ let Data = [
 
   {
     content: '  Sport',
-    img: require('../../src/VocabularyImage/google_icon.png'),
+    img: require('../../src/VocabularyImage/sport.jpg'),
   },
 
   {

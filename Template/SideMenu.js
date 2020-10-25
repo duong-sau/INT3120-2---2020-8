@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, StyleSheet, Text} from 'react-native';
 import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -15,24 +15,51 @@ import Login from '../Screens/Login';
 import Privacy from '../Screens/Privacy';
 import About from '../Screens/About';
 function fox() {
-  return <Fox />;
+  return (
+    <View>
+      <Fox />
+      <View>
+        <Text
+          style={{
+            marginTop: 50,
+            marginLeft: 100,
+            color: 'white',
+            fontSize: 20,
+            fontWeight: 'bold',
+          }}>
+          FOXENGLISH
+        </Text>
+        <Text
+          style={{marginTop: 10, marginLeft: 80, color: 'white', fontSize: 15}}>
+          Know Fox, know success
+        </Text>
+      </View>
+    </View>
+  );
 }
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView
-      style={{backgroundColor: 'rgba(90,240,113,30)', color: 'white'}}
+      style={{backgroundColor: 'white', color: 'red'}}
       {...props}>
       <DrawerItem
         label={() => fox()}
-        style={{height: 100, width: 100}}
+        style={{
+          height: 200,
+          width: 500,
+          marginTop: -50,
+          borderBottomColor: '#606060',
+          borderBottomWidth: 3,
+          marginLeft: 0,
+          marginBottom: 30,
+          backgroundColor: 'rgb(60,179,113)',
+        }}
         onPress={() => props.navigation.dispatch(DrawerActions.closeDrawer())}
       />
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
   );
 }
-
-
 
 const Drawer = createDrawerNavigator();
 
@@ -43,27 +70,23 @@ function MyDrawer() {
       <Drawer.Screen name="NGỮ PHÁP" component={GrammarController} />
       <Drawer.Screen name="TỪ VỰNG" component={VocabularyController} />
       <Drawer.Screen name="LUYỆN TẬP" component={Practice} />
-      <Drawer.Screen name="TOEIC 600+" component={Toeic600} />
-      <Drawer.Screen name="TOEIC 800+" component={Toeic600} />
-      <Drawer.Screen name="ĐĂNG NHẬP" component={Login} />
-      <Drawer.Screen name="GÓP Ý" component={View} />
-      <Drawer.Screen name="ĐIỀU KHOẢN" component={Privacy} />
-      <Drawer.Screen name="VỀ CHÚNG TÔI" component={About} />
+      <Drawer.Screen name="ĐĂNG XUẤT" component={Login} />
     </Drawer.Navigator>
   );
 }
 export class Fox extends Component {
   render() {
     return (
-      <Image
-        style={{width: 100, height: 100}}
-        source={require('../src/mrfox.png')}
-      />
+      <View style={{width: 100, height: 20, backgroundColor: 'violet'}}>
+        <Image
+          style={{width: 80, height: 80, marginTop: 60, marginLeft: 0}}
+          source={require('../src/mrfox.png')}
+        />
+      </View>
     );
   }
 }
 export default function App() {
-  return (
-      <MyDrawer />
-  );
+  return <MyDrawer />;
 }
+const styles = StyleSheet.create({});

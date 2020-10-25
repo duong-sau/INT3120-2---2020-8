@@ -33,7 +33,7 @@ export default class GrammarController extends Component {
                   name="bars"
                   color="white"
                   size={30}
-                  style={{marginLeft: 10}}
+                  style={{marginLeft: 22}}
                 />
               </TouchableOpacity>
             ),

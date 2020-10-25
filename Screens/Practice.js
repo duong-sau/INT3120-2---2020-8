@@ -157,6 +157,7 @@ export default class Practice extends Component {
     return (
       <View style={styles.style}>
         <View style={styles.titleFrame}>
+          <View style={styles.icons} />
           <Icon
             name="arrow-left"
             color="white"
@@ -202,7 +203,7 @@ export default class Practice extends Component {
             onPress={() => {
               this.back();
             }}>
-            <Icon name="arrow-circle-left" size={50} color="#42BDFB" />
+            <Icon name="arrow-circle-left" size={50} color="rgb(60,179,113)" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.submit_button}
@@ -225,7 +226,7 @@ export default class Practice extends Component {
             onPress={() => {
               this.next();
             }}>
-            <Icon name="arrow-circle-right" size={50} color="#42BDFB" />
+            <Icon name="arrow-circle-right" size={50} color="rgb(60,179,113)" />
           </TouchableOpacity>
         </View>
       </View>
@@ -260,7 +261,7 @@ export class Answer extends Component {
 const styles = StyleSheet.create({
   titleFrame: {
     width: '100%',
-    height: '10%',
+    height: '15%',
     backgroundColor: 'rgb(60,179,113)',
     display: 'flex',
     flexDirection: 'row',
@@ -269,9 +270,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: 'white',
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginRight: '5%',
+    marginRight: '15%',
+  },
+  icons: {
+    marginLeft: -5,
   },
   question: {
     marginLeft: '2%',
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
   },
   answerFrame: {
     marginTop: 180,
-    marginLeft: 0,
+    marginLeft: 10,
   },
   answer: {
     display: 'flex',
@@ -333,7 +337,7 @@ const styles = StyleSheet.create({
   submit_button: {
     width: 110,
     elevation: 8,
-    backgroundColor: 'rgb(0,191,255)',
+    backgroundColor: 'rgb(60,179,113)',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
