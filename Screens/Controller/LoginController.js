@@ -38,33 +38,10 @@ global.loginGG = async () => {
     global.save();
   });
 };
-global.loginFirebase = (credential, t) => {
-  firebase
-    .auth()
-    .signInWithCredential(credential)
-    .then(function (user) {
-      global.userID = user.user.uid;
-      console.log(user.additionalUserInfo.profile.picture);
-      if (t === 1) {
-        global.userPicture = user.additionalUserInfo.profile.picture.data.url;
-      }
-      global.L.setState({repaint: 1});
-      global.userName = user.user.displayName;
-      global.getAuthUser();
-    })
-    .catch(function (error) {});
 };
-global.logout = async () => {
-  global.remove();
-  global.isLogin = 0;
-  global.L.setState({repaint: 1});
-};
-export default class LoginController extends Component {
-  constructor(props) {
-    super(props);
-    global.resume();
-  }
 
+export default class LoginController extends Component {
+ 
   render() {
     GoogleSignin.configure({
       webClientId:
@@ -78,11 +55,7 @@ export default class LoginController extends Component {
             name={'Login'}
             component={Login}
           />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name={'Grammar'}
-            component={SideMenu}
-          />
+         
         </Stack.Navigator>
       </NavigationContainer>
     );
